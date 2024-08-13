@@ -1,0 +1,88 @@
+<!doctype html><title>FIRE</title>
+<link rel="icon" href="https://fav.farm/🔥" />
+<script src="../../build/fireworks-bundle.js"></script>
+<script src="../vendor/tquery-bundle.js"></script>
+<style>
+	a {
+		cursor: url('https://fav.farm/🔥') 12 0, auto;
+	}
+</style>
+<body>
+	<a href="https://akdavis83.github.io/Fire2/"><div style="text-align: center; z-index: 1;">
+		<h1 style="z-index: 100; position: absolute; text-align: center; left: 600px; color: orangered;">
+		Fire
+		</h1>
+		<h1 style="z-index: 100; position: absolute; text-align: center; left: 10px; top: 200px; color: rgb(255, 200, 0);">
+			1 And when the day of Pentecost was fully come, they were all with one accord in one place. 2 And suddenly there came a sound from heaven as of a rushing mighty wind, and it filled all the house where they were sitting. 3 And there appeared unto them cloven tongues like as of fire, and it sat upon each of them. 4 And they were all filled with the Holy Ghost, and began to speak with other tongues, as the Spirit gave them utterance. (Acts 2:1-4)
+		</h1>
+	</div></a>
+	
+	
+	
+	<script>
+	var world	= tQuery.createWorld().boilerplate().start();
+	var container	= world.tScene();
+	
+	world.tCamera().position.z	= 15;
+	
+	world.tRenderer().setClearColorHex( 0xFF9900, world.tRenderer().getClearAlpha() );
+
+
+	// create the emitter
+	var emitter	= Fireworks.createEmitter({nParticles : 400})
+		.effectsStackBuilder()
+			.spawnerSteadyRate(100)
+			.position(Fireworks.createShapePoint(0, 0, 0))
+			.velocity(Fireworks.createShapePoint(0, 5, 0))
+			.lifeTime(0.3, 0.5)
+			.randomVelocityDrift(Fireworks.createVector(10, 0, 10))
+			.renderToThreejsParticleSystem({
+				particleSystem	: function(emitter){
+					var geometry	= new THREE.Geometry();
+					// init vertices
+					for( var i = 0; i < emitter.nParticles(); i++ ){
+						geometry.vertices.push( new THREE.Vector3() );
+					}
+					// init colors
+					geometry.colors	= new Array(emitter.nParticles())
+					for( var i = 0; i < emitter.nParticles(); i++ ){
+						geometry.colors[i]	= new THREE.Color();
+					}
+					
+					var texture	= Fireworks.ProceduralTextures.buildTexture();
+					var material	= new THREE.ParticleBasicMaterial({
+						color		: new THREE.Color().setHSV(0.5, 0.9, 0.9).getHex(),
+						size		: 5,
+						sizeAttenuation	: true,
+						vertexColors	: true,
+						map		: texture,
+						blending	: THREE.AdditiveBlending,
+						depthWrite	: false,
+						transparent	: true
+					});
+					var particleSystem		= new THREE.ParticleSystem(geometry, material);
+					particleSystem.dynamic		= true;
+					particleSystem.sortParticles	= true;
+					
+					particleSystem.position.y	= -2.5;
+					container.add(particleSystem);
+					return particleSystem;
+				}
+			}).back()
+		.start();
+
+	world.loop().hook(function(delta, now){
+		emitter.update(delta).render();
+	})
+</script></body>
+
+
+
+
+
+
+
+
+
+
+
